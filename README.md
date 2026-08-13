@@ -1,41 +1,151 @@
-![Conclave Logo](/public/assets/img/conclave-mask-small.ico)
+# Conclave — Real-Time Collaborative Text Editor
 
-# Conclave: Collaborate in private
+> **Note:** This is a fork of the original [Conclave](https://github.com/conclave-team/conclave) project, updated to run on **Node.js v20** and **Windows**.
 
-# No Longer Maintained
+---
 
-Conclave was made for fun and educational purposes but it is no longer actively maintained. The creators have since moved onto other projects and work. It will remain open so that developers can ask questions and fork it. The demo at [https://conclave.tech](https://conclave.tech) will also stay up. However, feature requests will **not** be worked on by the creators at this time.
+## What Is This?
 
-Thanks again to all the developers who found this project interesting. Feel free ask questions to learn more about how it works and its internals. Hopefully you will venture off and create your own version of Conclave as well.
+Conclave is an open-source, real-time, **peer-to-peer collaborative text editor** that runs in the browser. It is built entirely in JavaScript without any central database.
 
-## Summary
+- **CRDT** (Conflict-Free Replicated Data Types) keeps all users in sync
+- **WebRTC** (via PeerJS) sends changes directly between users — no server stores your text
+- **SimpleMDE** provides the Markdown editor interface
+- **Express** serves the app and acts as the PeerJS signaling server
 
-Conclave is an open-source, real-time, collaborative text editor for the browser built from scratch in JavaScript.
+---
 
-Intrigued by collaboration tools like Google Docs, we set out to build one from scratch. Conclave uses **Conflict-Free Replicated Data Types** (CRDT) to make sure all users stay in-sync and **WebRTC** to allow users to send messages directly to one another. The result is a private and decentralized way to collaborate on documents.
+## Prerequisites
 
-For more details on how we designed and built Conclave, read our [case study](https://conclave-team.github.io/conclave-site/).
+| Tool | Version |
+|------|---------|
+| Node.js | v20.x (tested) |
+| npm | v9+ |
+| OS | Windows (PowerShell) |
 
-# How to Run Locally
+---
 
-You will need node and npm. First download the dependencies.
+## Setup & Run
 
-```
+### 1. Install dependencies
+
+```powershell
 npm install
 ```
 
-Next, you will need to build and compile the assets and start the server. You can do that all in an npm command.
+### 2. Build and start the server
 
-```
+```powershell
 npm run local
 ```
 
-We've added a Makefile and Dockerfile to make this easier. I highly recommend using them.
+This single command will:
+1. Set the required OpenSSL flag for Node 20 compatibility
+2. Build and bundle all JavaScript via Webpack
+3. Start the Express server on **port 3000**
 
-Simply run:
+### 3. Open in browser
 
 ```
-make run-local
+http://localhost:3000
 ```
 
-And you will be good to go.
+The terminal will stay open — that is normal. The server is running as long as the terminal is open.
+
+To stop the server, press `Ctrl + C` in the terminal.
+
+---
+
+## Running Again (Restart)
+
+If you get `EADDRINUSE: address already in use :::3000`, a previous server is still running. Kill it first:
+
+```powershell
+# Find the PID using port 3000
+netstat -ano | findstr :3000
+
+# Kill it (replace 1234 with the actual PID)
+taskkill /PID 1234 /F
+```
+
+Then run `npm run local` again.
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run local` | Build with Webpack + start the server (use this for local dev) |
+| `npm start` | Start the server only (no rebuild) |
+| `npm run build` | Rebuild Webpack bundles only |
+| `npm test` | Run Jasmine unit tests |
+
+---
+
+## Fixes Applied (vs Original)
+
+The original project was built for Node.js v14. The following changes were made to support **Node.js v20 on Windows**:
+
+| Issue | Fix |
+|-------|-----|
+| `ERR_OSSL_EVP_UNSUPPORTED` error on build | Added `NODE_OPTIONS=--openssl-legacy-provider` to `build` and `local` scripts in `package.json` |
+| Webpack `mode` warning | Set `mode: 'development'` in `webpack.config.js` |
+| Bundle size warnings | Added `performance: { hints: false }` in `webpack.config.js` |
+| Missing `glob` dependency | Added `glob` to dependencies via `npm install glob` |
+
+---
+
+## Known Warnings (Safe to Ignore)
+
+```
+WARNING in ../node_modules/peerjs/dist/peerjs.min.js
+Critical dependency: the request of a dependency is an expression
+```
+
+This comes from the `peerjs` third-party library. It is harmless and cannot be fixed without modifying the library itself.
+
+---
+
+## Project Structure
+
+```
+conclave/
+├── app.js              ← Express server entry point
+├── lib/                ← All core logic (CRDT, editor, broadcast, etc.)
+│   ├── controller.js   ← Main coordinator between all modules
+│   ├── crdt.js         ← CRDT algorithm for conflict-free sync
+│   ├── broadcast.js    ← WebRTC peer-to-peer messaging
+│   ├── editor.js       ← SimpleMDE editor bindings
+│   └── ...
+├── views/              ← Pug HTML templates
+├── public/             ← Static assets (CSS, compiled JS bundles)
+├── webpack.config.js   ← Webpack build configuration
+└── package.json        ← Dependencies and npm scripts
+```
+
+---
+
+## How Collaboration Works
+
+1. Open `http://localhost:3000` — you are the **host**
+2. Copy the share link shown at the top of the editor
+3. Send it to another person (or open it in a second tab)
+4. Both users can now type simultaneously — changes sync in real time
+
+---
+
+## Docker (Alternative)
+
+```powershell
+docker build -t conclave .
+docker run -p 3000:3000 conclave
+```
+
+> The Dockerfile targets `node:14`. If you are using a newer base image, apply the same `NODE_OPTIONS` fix described above.
+
+---
+
+## License
+
+ISC — See [LICENSE.txt](LICENSE.txt)
