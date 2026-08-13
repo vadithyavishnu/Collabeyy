@@ -1,12 +1,12 @@
-# Conclave — Real-Time Collaborative Text Editor
+# Collabeyy — Real-Time Collaborative Text Editor
 
-> **Note:** This is a fork of the original [Conclave](https://github.com/conclave-team/conclave) project, updated to run on **Node.js v20** and **Windows**.
+> **Note:** This project is a renamed and updated fork, running on **Node.js v20** and **Windows**.
 
 ---
 
 ## What Is This?
 
-Conclave is an open-source, real-time, **peer-to-peer collaborative text editor** that runs in the browser. It is built entirely in JavaScript without any central database.
+Collabeyy is an open-source, real-time, **peer-to-peer collaborative text editor** that runs in the browser. It is built entirely in JavaScript without any central database.
 
 - **CRDT** (Conflict-Free Replicated Data Types) keeps all users in sync
 - **WebRTC** (via PeerJS) sends changes directly between users — no server stores your text
@@ -110,7 +110,7 @@ This comes from the `peerjs` third-party library. It is harmless and cannot be f
 ## Project Structure
 
 ```
-conclave/
+collabeyy/
 ├── app.js              ← Express server entry point
 ├── lib/                ← All core logic (CRDT, editor, broadcast, etc.)
 │   ├── controller.js   ← Main coordinator between all modules
@@ -138,11 +138,9 @@ conclave/
 ## Docker (Alternative)
 
 ```powershell
-docker build -t conclave .
-docker run -p 3000:3000 conclave
+docker build -t collabeyy .
+docker run -p 3000:3000 collabeyy
 ```
-
-> The Dockerfile targets `node:14`. If you are using a newer base image, apply the same `NODE_OPTIONS` fix described above.
 
 ---
 

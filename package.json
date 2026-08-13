@@ -1,5 +1,5 @@
 {
-  "name": "conclave",
+  "name": "collabeyy",
   "version": "1.0.0",
   "description": "Peer-to-peer collaborative text editor",
   "main": "app.js",
@@ -12,16 +12,7 @@
     "perform": "babel-node performance/script.js",
     "perform-linear": "babel-node performance/scriptLinear.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Super-NES/conclave.git"
-  },
-  "author": "Super-NES",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Super-NES/conclave/issues"
-  },
-  "homepage": "https://github.com/Super-NES/conclave#readme",
   "dependencies": {
     "acorn": "^6.4.2",
     "express": "^4.17.1",
