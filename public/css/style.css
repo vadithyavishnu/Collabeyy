@@ -118,7 +118,7 @@ NavBar
 Editor
 ****************/
 
-#conclave {
+#conclave, #collabeyy {
   width: 100%;
   margin: 0 auto;
 }
@@ -420,7 +420,8 @@ ToolTip
   Loading
 *************/
 
-#conclave.hide + .loading {
+#conclave.hide + .loading,
+#collabeyy.hide + .loading {
   display: block;
 }
 
